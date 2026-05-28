@@ -1,2 +1,2 @@
 #!/bin/bash
-ipcalc -b "$1/$2" | awk '/HostMin/ {min=$2} /HostMax/ {max=$2} END {print min " - " max}'
+IFS=. read -r o1 o2 o3 o4 <<< "$1" && mask=$((0xFFFFFFFF << (32 - $2))) && net=$(((o1<<24 | o2<<16 | o3<<8 | o4) & mask)) && broad=$((net | (~mask & 0xFFFFFFFF))) && min=$((net + 1)) && max=$((broad - 1)) && echo "$(((min>>24)&255)).$(((min>>16)&255)).$(((min>>8)&255)).$(min&255) - $(((max>>24)&255)).$(((max>>16)&255)).$(((max>>8)&255)).$(max&255)"
